@@ -7,5 +7,4 @@ import br.com.api_neki.entities.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-
 }
