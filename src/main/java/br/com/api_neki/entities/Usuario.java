@@ -18,6 +18,7 @@ public class Usuario {
 	private Long id;
 
 	private String nome;
+	private String email;
 	private String senha;
 
 	@OneToMany(mappedBy = "usuario")
@@ -27,10 +28,11 @@ public class Usuario {
 		super();
 	}
 
-	public Usuario(Long id, String nome, String senha, List<HabilidadeUsuario> habilidadesUsuario) {
+	public Usuario(Long id, String nome, String email, String senha, List<HabilidadeUsuario> habilidadesUsuario) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.email = email;
 		this.senha = senha;
 		this.habilidadesUsuario = habilidadesUsuario;
 	}
@@ -49,6 +51,14 @@ public class Usuario {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getSenha() {
