@@ -3,9 +3,12 @@ package br.com.api_neki.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,18 +25,37 @@ public class HabilidadeController {
 	private HabilidadeService habilidadeService;
 	
 	@GetMapping
-	public List<HabilidadeResDTO> buscarHabilidades() {
-		return habilidadeService.buscarHabilidades();
+	public ResponseEntity<List<HabilidadeResDTO>> buscarHabilidades() {
+		return ResponseEntity.ok(habilidadeService.buscarHabilidades());
 	}
 	
 	@GetMapping("/{id}")
-	public HabilidadeResDTO buscarHabilidadePorId(@PathVariable Long id) {
-		return habilidadeService.buscarHabilidadePorId(id);
+	public ResponseEntity<HabilidadeResDTO> buscarHabilidadePorId(@PathVariable Long id) {
+		return ResponseEntity.ok(habilidadeService.buscarHabilidadePorId(id));
 	}
 	
 	@PostMapping("/cadastrar")
-	public HabilidadeResDTO cadastrarHabilidade(@RequestBody HabilidadeReqDTO habilidadeReq) {
-		return habilidadeService.cadastrarHabilidade(habilidadeReq);
+	public ResponseEntity<HabilidadeResDTO> cadastrarHabilidade(@RequestBody HabilidadeReqDTO habilidadeReq) {
+		return ResponseEntity.status(201).body(habilidadeService.cadastrarHabilidade(habilidadeReq));
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<HabilidadeResDTO> atualizarHabilidade(@PathVariable Long id, @RequestBody HabilidadeReqDTO habilidadeReq) {
+		return ResponseEntity.status(200).body(habilidadeService.atualizarHabilidades(id, habilidadeReq));
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deletarHabilidade(@PathVariable Long id) {
+		habilidadeService.deletarHabilidade(id);
+		return  ResponseEntity.status(204).build();
 	}
 
 }
+
+
+
+
+
+
+
+
