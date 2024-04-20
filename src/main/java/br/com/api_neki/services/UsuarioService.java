@@ -1,5 +1,7 @@
 package br.com.api_neki.services;
 
+
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.api_neki.DTO.LoginReqDTO;
 import br.com.api_neki.DTO.LoginResDTO;
 import br.com.api_neki.DTO.UsuarioReqDTO;
 import br.com.api_neki.DTO.UsuarioResDTO;
@@ -24,20 +27,22 @@ import br.com.api_neki.security.JWTService;
 @Service
 public class UsuarioService {
 	
+	private static final String BEARER =  "Bearer ";
+	
 	@Autowired
-	UsuarioRepository usuarioRepository;
+	private UsuarioRepository usuarioRepository;
 	
 	@Autowired
 	private ModelMapper modelMapper;
 	
 	@Autowired
-	JWTService jwtService;
+	private JWTService jwtService;
 	
 	@Autowired
-	AuthenticationManager authManager;
+	private AuthenticationManager authManager;
 	
 	@Autowired
-	PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	public List<UsuarioResDTO> buscarUsuarios() {
 		
@@ -96,7 +101,7 @@ public class UsuarioService {
 		
 	}
 	
-	public UsuarioResDTO obterPorEmail(String email){
+	public UsuarioResDTO buscarPorEmail(String email){
         Optional<Usuario> optUsuario =  usuarioRepository.findByEmail(email);
 
 		if(optUsuario.isEmpty()){
@@ -105,32 +110,40 @@ public class UsuarioService {
         return modelMapper.map(optUsuario.get(),UsuarioResDTO.class);
     }
 
-	public void uniqueEMAILeUSER(UsuarioReqDTO usuarioReq, Long id){
-		List<UsuarioResDTO> listaUsuarioResponse = buscarUsuarios();
-
-		for (UsuarioResDTO usuarioResponse : listaUsuarioResponse){
-			if(usuarioResponse.getEmail().equals(usuarioReq.getEmail()) && usuarioResponse.getId() != id){
-				throw new RuntimeException("E-mail já cadastrado!");
-			}
-			else if (usuarioResponse.getNome().equals(usuarioReq.getNome()) && usuarioResponse.getId() != id) {
-				throw new RuntimeException("Nome de usuario já cadastrado!");
-			}
-		}		
-		
-	}
+//	public void uniqueEMAILeUSER(UsuarioReqDTO usuarioReq, Long id){
+//		List<UsuarioResDTO> listaUsuarioResponse = buscarUsuarios();
+//
+//		for (UsuarioResDTO usuarioResponse : listaUsuarioResponse){
+//			if(usuarioResponse.getEmail().equals(usuarioReq.getEmail()) && usuarioResponse.getId() != id){
+//				throw new RuntimeException("E-mail já cadastrado!");
+//			}
+//			else if (usuarioResponse.getNome().equals(usuarioReq.getNome()) && usuarioResponse.getId() != id) {
+//				throw new RuntimeException("Nome de usuario já cadastrado!");
+//			}
+//		}		
+//		
+//	}
 	
-	public LoginResDTO logar(String email, String senha) {
 		
+//		return modelMapper.map(optUsuario.get(), UsuarioResDTO.class);
+//		
+//	}
+	
+	public LoginResDTO logar(LoginReqDTO loginReq) {
+				
 		try {
-			Authentication auth = authManager.authenticate(new UsernamePasswordAuthenticationToken(email, senha, Collections.emptyList()));
+			
+			Authentication auth = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginReq.getEmail(), loginReq.getSenha(), Collections.emptyList()));
 			
 			SecurityContextHolder
 			.getContext()
 			.setAuthentication(auth);
 			
-			String token = "Bearer " + jwtService.gerarToken(auth);
 			
-			UsuarioResDTO usuarioRes = obterPorEmail(email);
+			String token = BEARER + jwtService.gerarToken(auth);
+			
+			UsuarioResDTO usuarioRes = buscarPorEmail(loginReq.getEmail());
+
 			
 			return new LoginResDTO(token, usuarioRes);
 			
