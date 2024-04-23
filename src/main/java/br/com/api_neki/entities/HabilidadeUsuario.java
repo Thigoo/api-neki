@@ -15,7 +15,7 @@ public class HabilidadeUsuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
 	private Integer nivel;
 
 	@ManyToOne
@@ -30,11 +30,11 @@ public class HabilidadeUsuario {
 		super();
 	}
 
-	public HabilidadeUsuario(Long id, Integer nivel, Usuario usuario, Habilidade habilidade) {
+	public HabilidadeUsuario(Long id, Usuario usuario, Integer nivel, Habilidade habilidade) {
 		super();
 		this.id = id;
-		this.nivel = nivel;
 		this.usuario = usuario;
+		this.nivel = nivel;
 		this.habilidade = habilidade;
 	}
 

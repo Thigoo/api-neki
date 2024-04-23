@@ -27,7 +27,8 @@ public class Habilidade {
 		super();
 	}
 
-	public Habilidade(Long id, String nome, String descricao, List<HabilidadeUsuario> habilidadesUsuario) {
+	public Habilidade(Long id, String nome, String descricao,
+			List<HabilidadeUsuario> habilidadesUsuario) {
 		super();
 		this.id = id;
 		this.nome = nome;

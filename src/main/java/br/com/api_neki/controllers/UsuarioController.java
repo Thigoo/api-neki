@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.api_neki.DTO.HabilidadeUsuarioResDTO;
 import br.com.api_neki.DTO.LoginReqDTO;
 import br.com.api_neki.DTO.LoginResDTO;
 import br.com.api_neki.DTO.UsuarioReqDTO;
 import br.com.api_neki.DTO.UsuarioResDTO;
 import br.com.api_neki.security.JWTService;
+import br.com.api_neki.services.HabilidadeUsuarioService;
 import br.com.api_neki.services.UsuarioService;
 
 @RestController
@@ -27,6 +29,9 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private HabilidadeUsuarioService habilidadeUsuarioService;
 
 	@Autowired
 	private JWTService jwtService;
@@ -106,5 +111,39 @@ public class UsuarioController {
 			return ResponseEntity.ok("Token inválido ou expirado");
 		}
 	}
+	
+	@GetMapping("/habilidades_usuario")
+	public ResponseEntity<List<HabilidadeUsuarioResDTO>> buscarHabilidadesUsuario(@RequestParam Long id) {
+		return ResponseEntity.ok(habilidadeUsuarioService.buscarHabilidadesAssociadas(id));
+	}
+	
+	@PostMapping("/cadastrar/habilidade")
+	public ResponseEntity<HabilidadeUsuarioResDTO> cadastrarHabilidade(@RequestParam Long id_usuario, @RequestParam Long id_habilidade, Integer nivel) {
+		
+		return ResponseEntity.status(201).body(habilidadeUsuarioService.cadastrarHabilidade(id_usuario, id_habilidade, nivel));
+		
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
